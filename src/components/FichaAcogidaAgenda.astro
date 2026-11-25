@@ -1,0 +1,53 @@
+<div class="tarjeta-cristal caja-agenda-form">
+    <span class="numero-paso">Datos de acogida — Confidencial</span>
+    <h2>Configura tu sesión virtual</h2>
+    <p class="descripcion-agenda">
+        Puedes usar un seudónimo o iniciales si prefieres cuidar tu identidad desde el primer paso.
+    </p>
+
+    <div class="grid-campos-agenda">
+        <div class="campo-formulario">
+            <label for="nombre-acogida">Nombre o seudónimo</label>
+            <input type="text" id="nombre-acogida" placeholder="Ej. Alex / Iniciales M.R." required />
+        </div>
+
+        <div class="campo-formulario">
+            <label for="contacto-acogida">Correo o canal de enlace privado</label>
+            <input type="text" id="contacto-acogida" placeholder="Ej. usuario@correo.com o +51..." required />
+        </div>
+
+        <div class="campo-formulario">
+            <label for="modalidad-agenda">Modalidad de telepsicología</label>
+            <select id="modalidad-agenda">
+                <option value="Videollamada privada">Videollamada privada</option>
+                <option value="Llamada de audio sin cámara">Llamada de audio sin cámara</option>
+                <option value="Chat guiado en vivo">Chat guiado en vivo</option>
+            </select>
+        </div>
+
+        <div class="campo-formulario">
+            <label for="motivo-agenda">Situación principal a abordar</label>
+            <select id="motivo-agenda">
+                <option value="Ciberacoso y hostigamiento en redes">Ciberacoso y hostigamiento en redes</option>
+                <option value="Ansiedad, rumiación o insomnio digital">Ansiedad, rumiación o insomnio digital</option>
+                <option value="Exclusión o presión en grupos">Exclusión o presión en grupos</option>
+                <option value="Orientación y contención general">Orientación y contención general</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="bloque-horarios">
+        <span class="etiqueta-bloque-agenda">Selecciona una franja horaria</span>
+        <div class="lista-horarios" id="lista-horarios-agenda">
+            <button type="button" class="chip-horario" data-horario="Hoy — 18:00">Hoy — 18:00</button>
+            <button type="button" class="chip-horario" data-horario="Hoy — 19:30">Hoy — 19:30</button>
+            <button type="button" class="chip-horario" data-horario="Mañana — 10:00">Mañana — 10:00</button>
+            <button type="button" class="chip-horario" data-horario="Mañana — 16:30">Mañana — 16:30</button>
+            <button type="button" class="chip-horario" data-horario="Viernes — 17:00">Viernes — 17:00</button>
+        </div>
+    </div>
+
+    <div class="campo-formulario">
+        <label for="notas-acogida">¿Hay algo que quieras que sepamos antes? (Opcional)</label>
+        <textarea id="notas-acogida" rows="3" placeholder="Escribe brevemente cómo te sientes o qué te ayudaría a sentirte más cómodo..."></textarea>
+    </div>

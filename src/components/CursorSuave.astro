@@ -1,0 +1,36 @@
+<div class="aura-cursor" id="aura-cursor"></div>
+
+<script>
+    const aura = document.getElementById("aura-cursor");
+    let mouseX = 0;
+    let mouseY = 0;
+    let auraX = 0;
+    let auraY = 0;
+
+    if (aura && window.matchMedia("(pointer: fine)").matches) {
+        window.addEventListener("mousemove", (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            aura.style.opacity = "1";
+        });
+
+        document.addEventListener("mouseleave", () => {
+            aura.style.opacity = "0";
+        });
+
+        const interactivos = document.querySelectorAll("a, button, .tarjeta-cristal, .marco-ilustracion");
+        interactivos.forEach((el) => {
+            el.addEventListener("mouseenter", () => aura.classList.add("expandido"));
+            el.addEventListener("mouseleave", () => aura.classList.remove("expandido"));
+        });
+
+        function animarCursor() {
+            auraX += (mouseX - auraX) * 0.14;
+            auraY += (mouseY - auraY) * 0.14;
+            aura.style.transform = `translate3d(${auraX}px, ${auraY}px, 0) translate(-50%, -50%)`;
+            requestAnimationFrame(animarCursor);
+        }
+
+        animarCursor();
+    }
+</script>

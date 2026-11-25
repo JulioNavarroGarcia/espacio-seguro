@@ -1,0 +1,215 @@
+---
+import LayoutTest from '../layouts/LayoutTest.astro';
+import BarraProgresoTest from '../components/BarraProgresoTest.astro';
+import TarjetaPreguntaTest from '../components/TarjetaPreguntaTest.astro';
+import ResultadoTest from '../components/ResultadoTest.astro';
+---
+
+<LayoutTest titulo="Test de Bienestar Digital | Espacio Seguro">
+    <BarraProgresoTest />
+    <TarjetaPreguntaTest />
+    <ResultadoTest />
+</LayoutTest>
+
+<script>
+    const preguntas = [
+        {
+            categoria: "Hipervigilancia digital",
+            enunciado: "En los últimos días, ¿con qué frecuencia revisas el teléfono o redes por temor a mensajes, burlas o rumores?",
+            ayuda: "Observa si sientes urgencia o tensión al ver notificaciones.",
+            opciones: [
+                { texto: "Casi nunca", puntos: 0 },
+                { texto: "A veces", puntos: 1 },
+                { texto: "A menudo", puntos: 2 },
+                { texto: "Casi todo el tiempo", puntos: 3 }
+            ]
+        },
+        {
+            categoria: "Rumiación mental",
+            enunciado: "¿Te cuesta dejar de darle vueltas a comentarios, capturas o interacciones digitales incómodas cuando intentas descansar?",
+            ayuda: "Piensa en momentos de estudio o antes de dormir.",
+            opciones: [
+                { texto: "Casi nunca", puntos: 0 },
+                { texto: "A veces", puntos: 1 },
+                { texto: "A menudo", puntos: 2 },
+                { texto: "Casi todo el tiempo", puntos: 3 }
+            ]
+        },
+        {
+            categoria: "Autocensura y retraimiento",
+            enunciado: "¿Has evitado publicar, opinar o conectarte en espacios grupales por miedo a recibir burlas o presión?",
+            ayuda: "Incluye chats académicos, redes sociales o juegos en línea.",
+            opciones: [
+                { texto: "Casi nunca", puntos: 0 },
+                { texto: "A veces", puntos: 1 },
+                { texto: "A menudo", puntos: 2 },
+                { texto: "Casi todo el tiempo", puntos: 3 }
+            ]
+        },
+        {
+            categoria: "Impacto en el sueño y el cuerpo",
+            enunciado: "¿Has notado alteraciones del sueño, cansancio persistente o nudo en el estómago tras situaciones en línea?",
+            ayuda: "El cuerpo suele registrar el estrés antes de que lo pongamos en palabras.",
+            opciones: [
+                { texto: "Casi nunca", puntos: 0 },
+                { texto: "A veces", puntos: 1 },
+                { texto: "A menudo", puntos: 2 },
+                { texto: "Casi todo el tiempo", puntos: 3 }
+            ]
+        },
+        {
+            categoria: "Sensación de aislamiento",
+            enunciado: "¿Sientes que estás enfrentando solo o sola lo que ocurre en entornos digitales?",
+            ayuda: "Considera si sientes respaldo en tu entorno cercano.",
+            opciones: [
+                { texto: "Casi nunca", puntos: 0 },
+                { texto: "A veces", puntos: 1 },
+                { texto: "A menudo", puntos: 2 },
+                { texto: "Casi todo el tiempo", puntos: 3 }
+            ]
+        },
+        {
+            categoria: "Necesidad de contención",
+            enunciado: "¿Sentirías alivio conversar con un profesional en un espacio confidencial para ordenar lo que estás viviendo?",
+            ayuda: "No necesitas estar en una crisis extrema para pedir orientación.",
+            opciones: [
+                { texto: "Casi nunca", puntos: 0 },
+                { texto: "A veces", puntos: 1 },
+                { texto: "A menudo", puntos: 2 },
+                { texto: "Casi todo el tiempo", puntos: 3 }
+            ]
+        }
+    ];
+
+    let indiceActual = 0;
+    const respuestas = new Array(preguntas.length).fill(null);
+
+    const textoPaso = document.getElementById("texto-paso-test");
+    const porcentajeTexto = document.getElementById("porcentaje-test");
+    const rellenoBarra = document.getElementById("relleno-progreso-test");
+
+    const contenedorPregunta = document.getElementById("contenedor-pregunta-test");
+    const categoriaEl = document.getElementById("categoria-pregunta-test");
+    const enunciadoEl = document.getElementById("enunciado-pregunta-test");
+    const ayudaEl = document.getElementById("ayuda-pregunta-test");
+    const listaOpciones = document.getElementById("lista-opciones-test");
+
+    const btnAnterior = document.getElementById("btn-anterior-test") as HTMLButtonElement | null;
+    const btnSiguiente = document.getElementById("btn-siguiente-test") as HTMLButtonElement | null;
+
+    const contenedorResultado = document.getElementById("contenedor-resultado-test");
+    const nivelResultado = document.getElementById("nivel-resultado-test");
+    const tituloResultado = document.getElementById("titulo-resultado-test");
+    const descripcionResultado = document.getElementById("descripcion-resultado-test");
+    const pautaResultado = document.getElementById("pauta-resultado-test");
+    const btnReiniciar = document.getElementById("btn-reiniciar-test");
+
+    function renderizarPregunta() {
+        const actual = preguntas[indiceActual];
+        const total = preguntas.length;
+        const porcentaje = Math.round(((indiceActual + 1) / total) * 100);
+
+        if (textoPaso) textoPaso.textContent = `Pregunta ${indiceActual + 1} de ${total}`;
+        if (porcentajeTexto) porcentajeTexto.textContent = `${porcentaje}%`;
+        if (rellenoBarra) rellenoBarra.style.width = `${porcentaje}%`;
+
+        if (categoriaEl) categoriaEl.textContent = actual.categoria;
+        if (enunciadoEl) enunciadoEl.textContent = actual.enunciado;
+        if (ayudaEl) ayudaEl.textContent = actual.ayuda;
+
+        if (listaOpciones) {
+            listaOpciones.innerHTML = "";
+            actual.opciones.forEach((opcion, idx) => {
+                const boton = document.createElement("button");
+                boton.type = "button";
+                boton.className = "opcion-test";
+                if (respuestas[indiceActual] === idx) {
+                    boton.classList.add("seleccionada");
+                }
+                boton.textContent = opcion.texto;
+                boton.addEventListener("click", () => {
+                    respuestas[indiceActual] = idx;
+                    renderizarPregunta();
+                });
+                listaOpciones.appendChild(boton);
+            });
+        }
+
+        if (btnAnterior) btnAnterior.disabled = indiceActual === 0;
+        if (btnSiguiente) {
+            btnSiguiente.disabled = respuestas[indiceActual] === null;
+            btnSiguiente.textContent = indiceActual === total - 1 ? "Ver orientación" : "Siguiente";
+        }
+    }
+
+    function mostrarResultado() {
+        const puntajeTotal = respuestas.reduce((acum, idxSeleccionado, i) => {
+            if (idxSeleccionado === null) return acum;
+            return acum + preguntas[i].opciones[idxSeleccionado].puntos;
+        }, 0);
+
+        contenedorPregunta?.classList.add("oculto");
+        contenedorResultado?.classList.remove("oculto");
+
+        if (porcentajeTexto) porcentajeTexto.textContent = "100%";
+        if (rellenoBarra) rellenoBarra.style.width = "100%";
+
+        if (puntajeTotal <= 5) {
+            if (nivelResultado) nivelResultado.textContent = "Nivel orientativo: Leve";
+            if (tituloResultado) tituloResultado.textContent = "Tu malestar digital parece manejable por ahora";
+            if (descripcionResultado) {
+                descripcionResultado.textContent = "Tus respuestas sugieren señales puntuales de tensión o distracción en entornos digitales, sin un desgaste sostenido severo. Mantener límites saludables puede ayudarte a prevenir que crezca.";
+            }
+            if (pautaResultado) {
+                pautaResultado.textContent = "Define horarios de desconexión real, silencia notificaciones no urgentes y realiza 3 respiraciones lentas antes de responder mensajes que te generen incomodidad.";
+            }
+        } else if (puntajeTotal <= 11) {
+            if (nivelResultado) nivelResultado.textContent = "Nivel orientativo: Moderado";
+            if (tituloResultado) tituloResultado.textContent = "Hay señales claras de desgaste emocional en línea";
+            if (descripcionResultado) {
+                descripcionResultado.textContent = "La exposición digital está afectando tu calma, atención o descanso en varios momentos. Contar con un espacio de escucha y estrategia puede aliviarte de forma importante.";
+            }
+            if (pautaResultado) {
+                pautaResultado.textContent = "Evita responder en caliente o revisar chats justo antes de dormir, guarda evidencias si hay hostigamiento y considera agendar una sesión de orientación.";
+            }
+        } else {
+            if (nivelResultado) nivelResultado.textContent = "Nivel orientativo: Alto";
+            if (tituloResultado) tituloResultado.textContent = "Estás cargando un nivel alto de presión digital";
+            if (descripcionResultado) {
+                descripcionResultado.textContent = "Tus respuestas reflejan un impacto notable en tu bienestar emocional o descanso vinculado a situaciones digitales. No tienes que sostener este peso sin apoyo.";
+            }
+            if (pautaResultado) {
+                pautaResultado.textContent = "Pide respaldo a una persona o profesional de confianza, reduce el contacto directo con fuentes de hostigamiento y pasa por recepción para coordinar atención psicológica.";
+            }
+        }
+    }
+
+    btnAnterior?.addEventListener("click", () => {
+        if (indiceActual > 0) {
+            indiceActual--;
+            renderizarPregunta();
+        }
+    });
+
+    btnSiguiente?.addEventListener("click", () => {
+        if (respuestas[indiceActual] === null) return;
+        if (indiceActual < preguntas.length - 1) {
+            indiceActual++;
+            renderizarPregunta();
+        } else {
+            mostrarResultado();
+        }
+    });
+
+    btnReiniciar?.addEventListener("click", () => {
+        for (let i = 0; i < respuestas.length; i++) {
+            respuestas[i] = null;
+        }
+        indiceActual = 0;
+        contenedorResultado?.classList.add("oculto");
+        contenedorPregunta?.classList.remove("oculto");
+        renderizarPregunta();
+    });
+
+    renderizarPregunta();
+</script>

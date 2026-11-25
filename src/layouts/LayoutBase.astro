@@ -1,0 +1,45 @@
+---
+import '../styles/estilos.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CursorSuave from '../components/CursorSuave.astro';
+
+interface Props {
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{titulo}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+    <CursorSuave />
+    <Header />
+
+    <slot />
+
+    <Footer />
+
+    <script>
+        const elementosAnimados = document.querySelectorAll(".animar-scroll");
+
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach((entrada) => {
+                if (entrada.isIntersecting) {
+                    entrada.target.classList.add("visible");
+                }
+            });
+        }, { threshold: 0.2 });
+
+        elementosAnimados.forEach((el) => observador.observe(el));
+    </script>
+</body>
+</html>

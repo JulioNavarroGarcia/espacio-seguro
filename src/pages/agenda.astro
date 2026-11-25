@@ -1,0 +1,96 @@
+---
+import LayoutAgenda from '../layouts/LayoutAgenda.astro';
+import FichaAcogidaAgenda from '../components/FichaAcogidaAgenda.astro';
+import ConsentimientoAgenda from '../components/ConsentimientoAgenda.astro';
+import ConfirmacionAgenda from '../components/ConfirmacionAgenda.astro';
+---
+
+<LayoutAgenda titulo="Registro Clínico y Cita | Espacio Seguro">
+    <form id="formulario-agenda">
+        <FichaAcogidaAgenda />
+        <ConsentimientoAgenda />
+    </form>
+    <ConfirmacionAgenda />
+</LayoutAgenda>
+
+<script>
+    const formulario = document.getElementById("formulario-agenda") as HTMLFormElement | null;
+    const contenedorConfirmacion = document.getElementById("contenedor-confirmacion-agenda");
+    const chipsHorario = document.querySelectorAll(".chip-horario");
+    const errorMsg = document.getElementById("error-formulario-agenda");
+    const btnNuevaCita = document.getElementById("btn-nueva-cita");
+
+    let horarioSeleccionado = "";
+
+    chipsHorario.forEach((chip) => {
+        chip.addEventListener("click", () => {
+            chipsHorario.forEach((c) => c.classList.remove("activo"));
+            chip.classList.add("activo");
+            horarioSeleccionado = chip.getAttribute("data-horario") || "";
+            if (errorMsg) errorMsg.classList.add("oculto");
+        });
+    });
+
+    formulario?.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const nombreInput = document.getElementById("nombre-acogida") as HTMLInputElement | null;
+        const contactoInput = document.getElementById("contacto-acogida") as HTMLInputElement | null;
+        const modalidadSelect = document.getElementById("modalidad-agenda") as HTMLSelectElement | null;
+        const motivoSelect = document.getElementById("motivo-agenda") as HTMLSelectElement | null;
+        const consentimientoCheck = document.getElementById("check-consentimiento-agenda") as HTMLInputElement | null;
+
+        const nombre = nombreInput?.value.trim() || "";
+        const contacto = contactoInput?.value.trim() || "";
+
+        if (!nombre || !contacto) {
+            if (errorMsg) {
+                errorMsg.textContent = "Completa tu nombre o seudónimo y un canal de contacto para continuar.";
+                errorMsg.classList.remove("oculto");
+            }
+            return;
+        }
+
+        if (!horarioSeleccionado) {
+            if (errorMsg) {
+                errorMsg.textContent = "Selecciona una franja horaria disponible antes de confirmar.";
+                errorMsg.classList.remove("oculto");
+            }
+            return;
+        }
+
+        if (!consentimientoCheck?.checked) {
+            if (errorMsg) {
+                errorMsg.textContent = "Debes marcar el consentimiento informado simulado para registrar la cita.";
+                errorMsg.classList.remove("oculto");
+            }
+            return;
+        }
+
+        if (errorMsg) errorMsg.classList.add("oculto");
+
+        const resumenNombre = document.getElementById("resumen-nombre");
+        const resumenContacto = document.getElementById("resumen-contacto");
+        const resumenModalidad = document.getElementById("resumen-modalidad");
+        const resumenMotivo = document.getElementById("resumen-motivo");
+        const resumenHorario = document.getElementById("resumen-horario");
+
+        if (resumenNombre) resumenNombre.textContent = nombre;
+        if (resumenContacto) resumenContacto.textContent = contacto;
+        if (resumenModalidad) resumenModalidad.textContent = modalidadSelect?.value || "";
+        if (resumenMotivo) resumenMotivo.textContent = motivoSelect?.value || "";
+        if (resumenHorario) resumenHorario.textContent = horarioSeleccionado;
+
+        formulario.classList.add("oculto");
+        contenedorConfirmacion?.classList.remove("oculto");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    btnNuevaCita?.addEventListener("click", () => {
+        formulario?.reset();
+        horarioSeleccionado = "";
+        chipsHorario.forEach((c) => c.classList.remove("activo"));
+        contenedorConfirmacion?.classList.add("oculto");
+        formulario?.classList.remove("oculto");
+    });
+</script>

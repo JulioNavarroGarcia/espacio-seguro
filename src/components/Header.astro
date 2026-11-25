@@ -1,0 +1,60 @@
+<header class="cabecera" id="cabecera-principal">
+    <div class="contenedor-cabecera">
+        <a href="/#inicio" class="logo">
+            <span class="punto-pastel"></span>
+            Espacio<strong>Seguro</strong>
+        </a>
+
+        <button class="boton-menu-movil" id="boton-hamburguesa" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="navegacion" id="menu-navegacion">
+            <a href="/#inicio" class="enlace">Inicio</a>
+            <a href="/#seccion-test" class="boton-pastel boton-pequeno">Hacer Test</a>
+            <a href="/#seccion-agenda" class="boton-cristal boton-pequeno">Agendar Cita</a>
+        </nav>
+    </div>
+</header>
+
+<script>
+    let ultimoScroll = 0;
+    const cabecera = document.getElementById("cabecera-principal");
+    const botonHamburguesa = document.getElementById("boton-hamburguesa");
+    const menuNavegacion = document.getElementById("menu-navegacion");
+    const enlacesMenu = document.querySelectorAll(".navegacion a");
+
+    botonHamburguesa?.addEventListener("click", () => {
+        botonHamburguesa.classList.toggle("activo");
+        menuNavegacion?.classList.toggle("abierto");
+    });
+
+    enlacesMenu.forEach((enlace) => {
+        enlace.addEventListener("click", () => {
+            botonHamburguesa?.classList.remove("activo");
+            menuNavegacion?.classList.remove("abierto");
+        });
+    });
+
+    window.addEventListener("scroll", () => {
+        const actualScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (!menuNavegacion?.classList.contains("abierto")) {
+            if (actualScroll > ultimoScroll && actualScroll > 90) {
+                cabecera?.classList.add("oculta");
+            } else {
+                cabecera?.classList.remove("oculta");
+            }
+        }
+
+        if (actualScroll > 60) {
+            cabecera?.classList.add("con-fondo-cristal");
+        } else {
+            cabecera?.classList.remove("con-fondo-cristal");
+        }
+
+        ultimoScroll = actualScroll <= 0 ? 0 : actualScroll;
+    });
+</script>

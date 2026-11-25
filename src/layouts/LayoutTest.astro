@@ -1,0 +1,22 @@
+---
+import LayoutBase from './LayoutBase.astro';
+
+interface Props {
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+---
+
+<LayoutBase titulo={titulo}>
+    <main class="pagina-test">
+        <div class="contenedor contenedor-test">
+            <div class="encabezado-test">
+                <span class="etiqueta-cristal etiqueta-test-clara">Bienestar digital — Triaje anónimo</span>
+                <h1>Autoevaluación de estrés y ciberacoso</h1>
+                <p>Responde con honestidad y a tu ritmo. No guardamos datos personales ni nombres.</p>
+            </div>
+            <slot />
+        </div>
+    </main>
+</LayoutBase>

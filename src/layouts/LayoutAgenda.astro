@@ -1,0 +1,22 @@
+---
+import LayoutBase from './LayoutBase.astro';
+
+interface Props {
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+---
+
+<LayoutBase titulo={titulo}>
+    <main class="pagina-agenda">
+        <div class="contenedor contenedor-agenda">
+            <div class="encabezado-agenda">
+                <span class="etiqueta-cristal etiqueta-agenda-clara">Telepsicología — Recepción y registro</span>
+                <h1>Agenda tu sesión de acompañamiento</h1>
+                <p>Completa tu ficha inicial y elige un horario en un entorno diseñado para tu privacidad.</p>
+            </div>
+            <slot />
+        </div>
+    </main>
+</LayoutBase>

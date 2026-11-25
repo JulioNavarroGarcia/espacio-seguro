@@ -1,0 +1,65 @@
+---
+import LayoutBase from '../layouts/LayoutBase.astro';
+---
+
+<LayoutBase titulo="Espacio Seguro | Bienestar Digital y Telepsicología">
+
+    <section id="inicio" class="seccion-principal" style="background-image: url('https://img.freepik.com/free-photo/cozy-aesthetic-workspace-with-laptop-plants-warm-light_23-2152033088.jpg?semt=ais_hybrid&w=740&q=80');">
+        <div class="capa-calida"></div>
+        <div class="contenido-principal">
+            <div class="etiqueta-cristal">Bienestar digital</div>
+            <h1 class="titulo-gigante">Detrás de la pantalla,<br>hay emociones reales.</h1>
+            <p class="parrafo-principal">
+                El ciberacoso desgasta tu tranquilidad, pero no tienes que procesarlo en soledad.
+                Tómate un respiro, evalúa cómo te sientes hoy y conecta con nuestro servicio de teleatención segura.
+            </p>
+            <div class="caja-botones">
+                <a href="#seccion-test" class="boton-pastel">Iniciar Evaluación Anónima</a>
+                <a href="#seccion-agenda" class="boton-cristal">Ir a Recepción Virtual</a>
+            </div>
+        </div>
+    </section>
+
+    <main id="recorrido" class="seccion-recorrido">
+
+        <section id="seccion-test" class="franja-paso">
+            <div class="contenedor fila-zigzag animar-scroll">
+                <div class="columna-texto tarjeta-cristal">
+                    <span class="numero-paso">Paso 01 — Triaje Digital</span>
+                    <h3>Evaluación anónima y sin juicios</h3>
+                    <p>
+                        Muchas veces normalizamos la ansiedad que nos produce revisar el teléfono o el miedo a expresarnos en redes.
+                        Nuestro cuestionario interactivo te permite identificar indicadores de estrés digital y ciberacoso de forma <strong>100% confidencial</strong>, sin pedirte nombres ni registros previos.
+                    </p>
+                    <a href="/test" class="boton-pastel">Realizar autoevaluación</a>
+                </div>
+                <div class="columna-imagen">
+                    <div class="marco-ilustracion">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9KiI0itZrJVXent8YkK5lqTW8EQLbKPi_Gz9-m0HtbQ&s=10" alt="Evaluación digital anónima" class="imagen-paso" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="seccion-agenda" class="franja-paso franja-color-arena">
+            <div class="contenedor fila-zigzag fila-invertida animar-scroll">
+                <div class="columna-texto texto-libre">
+                    <span class="numero-paso">Paso 02 — Telepsicología</span>
+                    <h3>Acompañamiento clínico especializado</h3>
+                    <p>
+                        Si sientes que la situación te sobrepasa, habilitamos nuestro módulo de admisión clínica y reserva de citas.
+                        Conecta desde casa mediante sesiones de <strong>teleatención psicológica privada</strong>, bajo consentimiento informado y con un enfoque centrado en reconstruir tu bienestar y autoestima.
+                    </p>
+                    <a href="/agenda" class="boton-borde-oscuro">Agendar sesión virtual</a>
+                </div>
+                <div class="columna-imagen">
+                    <div class="marco-ilustracion">
+                        <img src="https://img.freepik.com/premium-vector/girl-with-headphones-sitting-armchair-with-eyes-closed-enjoying-music_851674-88277.jpg?semt=ais_hybrid&w=740&q=80" alt="Sesión de telepsicología con audífonos" class="imagen-paso" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</LayoutBase>
