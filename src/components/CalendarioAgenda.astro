@@ -1,0 +1,293 @@
+<div class="cal-espacio-bloque">
+    <div class="campo-formulario">
+        <label>Selecciona una fecha</label>
+        <div class="cal-espacio-caja">
+            <div class="cal-espacio-header">
+                <button type="button" class="cal-espacio-nav" id="btn-mes-anterior" aria-label="Mes anterior">&lsaquo;</button>
+                <strong class="cal-espacio-mes" id="etiqueta-mes-calendario"></strong>
+                <button type="button" class="cal-espacio-nav" id="btn-mes-siguiente" aria-label="Mes siguiente">&rsaquo;</button>
+            </div>
+
+            <div class="cal-espacio-semana">
+                <span>Lu</span>
+                <span>Ma</span>
+                <span>Mi</span>
+                <span>Ju</span>
+                <span>Vi</span>
+                <span>Sá</span>
+                <span>Do</span>
+            </div>
+
+            <div class="cal-espacio-dias" id="grilla-dias-calendario"></div>
+        </div>
+    </div>
+
+    <div class="campo-formulario">
+        <label>Horas disponibles</label>
+        <div class="cal-espacio-horas" id="lista-horarios-agenda">
+            <button type="button" class="cal-espacio-hora" data-horario="8:00 AM">8:00 AM</button>
+            <button type="button" class="cal-espacio-hora" data-horario="10:00 AM">10:00 AM</button>
+            <button type="button" class="cal-espacio-hora" data-horario="12:00 PM">12:00 PM</button>
+            <button type="button" class="cal-espacio-hora" data-horario="3:00 PM">3:00 PM</button>
+            <button type="button" class="cal-espacio-hora" data-horario="5:00 PM">5:00 PM</button>
+            <button type="button" class="cal-espacio-hora" data-horario="7:00 PM">7:00 PM</button>
+        </div>
+    </div>
+
+    <input type="hidden" id="fecha-seleccionada-input" value="" />
+    <input type="hidden" id="hora-seleccionada-input" value="" />
+</div>
+
+<style is:global>
+    .cal-espacio-bloque {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        margin-top: 18px;
+    }
+
+    .cal-espacio-caja {
+        background: #ffffff;
+        border: 1px solid #e6d7ce;
+        border-radius: 18px;
+        padding: 18px;
+        max-width: 420px;
+        width: 100%;
+    }
+
+    .cal-espacio-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+    }
+
+    .cal-espacio-mes {
+        font-size: 1rem;
+        color: #3a2d28;
+        text-transform: capitalize;
+    }
+
+    .cal-espacio-nav {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid #d7c3b8;
+        background: #fffaf7;
+        color: #3a2d28;
+        font-size: 1.2rem;
+        line-height: 1;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .cal-espacio-nav:hover {
+        background: #f3e4dc;
+        border-color: #b56c57;
+    }
+
+    .cal-espacio-semana {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+        text-align: center;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #8b7469;
+        margin-bottom: 8px;
+    }
+
+    .cal-espacio-dias {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+    }
+
+    .cal-espacio-dia {
+        height: 38px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: #3a2d28;
+        font-size: 0.92rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s ease;
+    }
+
+    .cal-espacio-dia:hover:not(:disabled) {
+        background: #f5e7e0;
+        border-color: #d8b5a6;
+    }
+
+    .cal-espacio-dia.es-hoy {
+        border-color: #b56c57;
+        font-weight: 700;
+    }
+
+    .cal-espacio-dia.activo {
+        background: #b56c57;
+        color: #ffffff;
+        border-color: #b56c57;
+        font-weight: 700;
+    }
+
+    .cal-espacio-dia:disabled {
+        color: #cabbb2;
+        cursor: not-allowed;
+        opacity: 0.55;
+    }
+
+    .cal-espacio-horas {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        max-width: 420px;
+        width: 100%;
+    }
+
+    .cal-espacio-hora {
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 1px solid #e2cfc5;
+        background: #ffffff;
+        color: #3a2d28;
+        font-size: 0.92rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s ease;
+    }
+
+    .cal-espacio-hora:hover {
+        background: #f5e7e0;
+        border-color: #b56c57;
+    }
+
+    .cal-espacio-hora.activo {
+        background: #b56c57;
+        color: #ffffff;
+        border-color: #b56c57;
+        font-weight: 600;
+    }
+</style>
+
+<script is:inline>
+    (function () {
+        function iniciarCalendarioAgenda() {
+            const etiquetaMes = document.getElementById("etiqueta-mes-calendario");
+            const grillaDias = document.getElementById("grilla-dias-calendario");
+            const btnAnterior = document.getElementById("btn-mes-anterior");
+            const btnSiguiente = document.getElementById("btn-mes-siguiente");
+            const inputFecha = document.getElementById("fecha-seleccionada-input");
+            const inputHora = document.getElementById("hora-seleccionada-input");
+            const botonesHora = document.querySelectorAll(".cal-espacio-hora");
+
+            if (!etiquetaMes || !grillaDias || grillaDias.dataset.iniciado === "true") return;
+            grillaDias.dataset.iniciado = "true";
+
+            const meses = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+
+            const hoy = new Date();
+            const hoyInicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+            let mesVisible = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+            let fechaElegidaISO = "";
+
+            function aISO(anio, mesIdx, dia) {
+                return anio + "-" + String(mesIdx + 1).padStart(2, "0") + "-" + String(dia).padStart(2, "0");
+            }
+
+            function render() {
+                const anio = mesVisible.getFullYear();
+                const mesIdx = mesVisible.getMonth();
+                etiquetaMes.textContent = meses[mesIdx] + " " + anio;
+
+                const primerDia = (new Date(anio, mesIdx, 1).getDay() + 6) % 7;
+                const diasEnMes = new Date(anio, mesIdx + 1, 0).getDate();
+                const hoyISO = aISO(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
+                grillaDias.innerHTML = "";
+
+                for (let i = 0; i < primerDia; i++) {
+                    grillaDias.appendChild(document.createElement("span"));
+                }
+
+                for (let dia = 1; dia <= diasEnMes; dia++) {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "cal-espacio-dia";
+                    btn.textContent = String(dia);
+
+                    const fechaObj = new Date(anio, mesIdx, dia);
+                    const iso = aISO(anio, mesIdx, dia);
+
+                    if (iso === hoyISO) btn.classList.add("es-hoy");
+                    if (iso === fechaElegidaISO) btn.classList.add("activo");
+
+                    if (fechaObj < hoyInicio) {
+                        btn.disabled = true;
+                    } else {
+                        btn.addEventListener("click", function () {
+                            fechaElegidaISO = iso;
+                            if (inputFecha) {
+                                inputFecha.value = dia + " de " + meses[mesIdx] + " " + anio;
+                            }
+                            const errorMsg = document.getElementById("error-formulario-agenda");
+                            if (errorMsg) errorMsg.classList.add("oculto");
+                            render();
+                        });
+                    }
+
+                    grillaDias.appendChild(btn);
+                }
+            }
+
+            if (btnAnterior) {
+                btnAnterior.addEventListener("click", function () {
+                    mesVisible = new Date(mesVisible.getFullYear(), mesVisible.getMonth() - 1, 1);
+                    render();
+                });
+            }
+
+            if (btnSiguiente) {
+                btnSiguiente.addEventListener("click", function () {
+                    mesVisible = new Date(mesVisible.getFullYear(), mesVisible.getMonth() + 1, 1);
+                    render();
+                });
+            }
+
+            botonesHora.forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    botonesHora.forEach(function (b) { b.classList.remove("activo"); });
+                    btn.classList.add("activo");
+                    if (inputHora) inputHora.value = btn.getAttribute("data-horario") || "";
+                    const errorMsg = document.getElementById("error-formulario-agenda");
+                    if (errorMsg) errorMsg.classList.add("oculto");
+                });
+            });
+
+            window.resetearCalendarioAgenda = function () {
+                fechaElegidaISO = "";
+                mesVisible = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+                if (inputFecha) inputFecha.value = "";
+                if (inputHora) inputHora.value = "";
+                botonesHora.forEach(function (b) { b.classList.remove("activo"); });
+                render();
+            };
+
+            render();
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", iniciarCalendarioAgenda);
+        } else {
+            iniciarCalendarioAgenda();
+        }
+        document.addEventListener("astro:page-load", iniciarCalendarioAgenda);
+    })();
+</script>

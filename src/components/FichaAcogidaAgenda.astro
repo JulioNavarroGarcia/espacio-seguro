@@ -1,53 +1,51 @@
-<div class="tarjeta-cristal caja-agenda-form">
-    <span class="numero-paso">Datos de acogida — Confidencial</span>
-    <h2>Configura tu sesión virtual</h2>
-    <p class="descripcion-agenda">
-        Puedes usar un seudónimo o iniciales si prefieres cuidar tu identidad desde el primer paso.
-    </p>
-
-    <div class="grid-campos-agenda">
-        <div class="campo-formulario">
-            <label for="nombre-acogida">Nombre o seudónimo</label>
-            <input type="text" id="nombre-acogida" placeholder="Ej. Alex / Iniciales M.R." required />
-        </div>
-
-        <div class="campo-formulario">
-            <label for="contacto-acogida">Correo o canal de enlace privado</label>
-            <input type="text" id="contacto-acogida" placeholder="Ej. usuario@correo.com o +51..." required />
-        </div>
-
-        <div class="campo-formulario">
-            <label for="modalidad-agenda">Modalidad de telepsicología</label>
-            <select id="modalidad-agenda">
-                <option value="Videollamada privada">Videollamada privada</option>
-                <option value="Llamada de audio sin cámara">Llamada de audio sin cámara</option>
-                <option value="Chat guiado en vivo">Chat guiado en vivo</option>
-            </select>
-        </div>
-
-        <div class="campo-formulario">
-            <label for="motivo-agenda">Situación principal a abordar</label>
-            <select id="motivo-agenda">
-                <option value="Ciberacoso y hostigamiento en redes">Ciberacoso y hostigamiento en redes</option>
-                <option value="Ansiedad, rumiación o insomnio digital">Ansiedad, rumiación o insomnio digital</option>
-                <option value="Exclusión o presión en grupos">Exclusión o presión en grupos</option>
-                <option value="Orientación y contención general">Orientación y contención general</option>
-            </select>
-        </div>
+<div style="display: flex; flex-direction: column; gap: 18px;">
+    <div>
+        <span class="numero-paso">Paso 2 de 2 — Solicitud de orientación</span>
+        <h2>Configura tu solicitud de orientación</h2>
+        <p class="descripcion-agenda" id="saludo-personalizado-ficha">
+            Completa estos datos para enviar tu solicitud de orientación.
+        </p>
     </div>
 
-    <div class="bloque-horarios">
-        <span class="etiqueta-bloque-agenda">Selecciona una franja horaria</span>
-        <div class="lista-horarios" id="lista-horarios-agenda">
-            <button type="button" class="chip-horario" data-horario="Hoy — 18:00">Hoy — 18:00</button>
-            <button type="button" class="chip-horario" data-horario="Hoy — 19:30">Hoy — 19:30</button>
-            <button type="button" class="chip-horario" data-horario="Mañana — 10:00">Mañana — 10:00</button>
-            <button type="button" class="chip-horario" data-horario="Mañana — 16:30">Mañana — 16:30</button>
-            <button type="button" class="chip-horario" data-horario="Viernes — 17:00">Viernes — 17:00</button>
-        </div>
+    <!-- Visible SOLO si es MENOR de 18 años -->
+    <div class="caja-consentimiento-agenda oculto" id="bloque-menor-edad" style="margin: 0;">
+        <p style="margin: 0;">
+            <strong>Aviso para menores de 18 años:</strong> Tu registro corresponde a una solicitud inicial de orientación. Para iniciar la atención psicológica se coordinará la autorización de tu <strong>padre, madre o apoderado</strong>.
+        </p>
     </div>
 
     <div class="campo-formulario">
-        <label for="notas-acogida">¿Hay algo que quieras que sepamos antes? (Opcional)</label>
-        <textarea id="notas-acogida" rows="3" placeholder="Escribe brevemente cómo te sientes o qué te ayudaría a sentirte más cómodo..."></textarea>
+        <label for="especialista-agenda">Seleccionar profesional de orientación (Opcional)</label>
+        <select id="especialista-agenda">
+            <option value="Cualquier especialista disponible">Cualquier especialista disponible</option>
+            <option value="Lic. Valeria Mendoza">Lic. Valeria Mendoza — Orientación y contención</option>
+            <option value="Lic. Diego Paredes">Lic. Diego Paredes — Bienestar juvenil y redes</option>
+            <option value="Lic. Camila Quispe">Lic. Camila Quispe — Salud mental y autocuidado</option>
+            <option value="Lic. Martín Salgado">Lic. Martín Salgado — Acompañamiento psicoeducativo</option>
+        </select>
     </div>
+
+    <div class="campo-formulario">
+        <label for="contacto-acogida" id="label-contacto-acogida">Correo o canal de enlace privado</label>
+        <input type="text" id="contacto-acogida" placeholder="Ej. usuario@correo.com o +51..." />
+    </div>
+
+    <div class="campo-formulario">
+        <label for="modalidad-agenda">Modalidad preferida de telepsicología</label>
+        <select id="modalidad-agenda">
+            <option value="Videollamada privada">Videollamada privada</option>
+            <option value="Llamada de audio sin cámara">Llamada de audio sin cámara</option>
+            <option value="Chat guiado en vivo">Chat guiado en vivo</option>
+        </select>
+    </div>
+
+    <div class="campo-formulario">
+        <label for="motivo-agenda">Situación principal a abordar</label>
+        <select id="motivo-agenda">
+            <option value="Ciberacoso y hostigamiento en redes">Ciberacoso y hostigamiento en redes</option>
+            <option value="Ansiedad, rumiación o insomnio digital">Ansiedad, rumiación o insomnio digital</option>
+            <option value="Exclusión o presión en grupos">Exclusión o presión en grupos</option>
+            <option value="Orientación y contención general">Orientación y contención general</option>
+        </select>
+    </div>
+</div>

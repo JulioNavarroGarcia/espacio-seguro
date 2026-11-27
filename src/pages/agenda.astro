@@ -1,96 +1,247 @@
 ---
 import LayoutAgenda from '../layouts/LayoutAgenda.astro';
 import FichaAcogidaAgenda from '../components/FichaAcogidaAgenda.astro';
+import CalendarioAgenda from '../components/CalendarioAgenda.astro';
 import ConsentimientoAgenda from '../components/ConsentimientoAgenda.astro';
 import ConfirmacionAgenda from '../components/ConfirmacionAgenda.astro';
 ---
 
-<LayoutAgenda titulo="Registro Clínico y Cita | Espacio Seguro">
-    <form id="formulario-agenda">
-        <FichaAcogidaAgenda />
-        <ConsentimientoAgenda />
+<LayoutAgenda titulo="Solicitud de Orientación | Espacio Seguro">
+    <form id="formulario-agenda" novalidate>
+        <!-- PASO 1 -->
+        <div class="tarjeta-cristal caja-agenda-form" id="paso-bienvenida-agenda">
+            <div style="display: flex; flex-direction: column; gap: 18px;">
+                <div>
+                    <span class="numero-paso">Paso 1 de 2 — Primer contacto</span>
+                    <h2>Antes de solicitar orientación, queremos conocerte</h2>
+                    <p class="descripcion-agenda">
+                        Queremos brindarte un acompañamiento adecuado y seguro. Puedes usar un seudónimo o tus iniciales si prefieres cuidar tu identidad.
+                    </p>
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="nombre-acogida">¿Cuál es tu nombre o seudónimo?</label>
+                    <input type="text" id="nombre-acogida" placeholder="Ej. Alex / Iniciales M.R." />
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="edad-acogida">¿Qué edad tienes?</label>
+                    <input type="number" id="edad-acogida" min="8" max="99" placeholder="Ej. 16 o 20" />
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="ciudad-acogida">¿En qué ciudad o región vives? (Opcional)</label>
+                    <input type="text" id="ciudad-acogida" placeholder="Ej. Lima, Ilo, Trujillo..." />
+                </div>
+
+                <p class="error-agenda oculto" id="error-paso-bienvenida"></p>
+
+                <div class="acciones-agenda">
+                    <a href="/test" class="boton-borde-oscuro boton-pequeno">Volver al test</a>
+                    <button type="button" class="boton-pastel" id="btn-continuar-ficha">Continuar a la solicitud</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="tarjeta-cristal caja-agenda-form oculto" id="paso-ficha-agenda">
+            <FichaAcogidaAgenda />
+            <CalendarioAgenda />
+            <ConsentimientoAgenda />
+        </div>
     </form>
+
     <ConfirmacionAgenda />
 </LayoutAgenda>
 
-<script>
-    const formulario = document.getElementById("formulario-agenda") as HTMLFormElement | null;
-    const contenedorConfirmacion = document.getElementById("contenedor-confirmacion-agenda");
-    const chipsHorario = document.querySelectorAll(".chip-horario");
-    const errorMsg = document.getElementById("error-formulario-agenda");
-    const btnNuevaCita = document.getElementById("btn-nueva-cita");
+<script is:inline>
+    function iniciarFlujoAgenda() {
+        const formulario = document.getElementById("formulario-agenda");
+        const pasoBienvenida = document.getElementById("paso-bienvenida-agenda");
+        const pasoFicha = document.getElementById("paso-ficha-agenda");
 
-    let horarioSeleccionado = "";
+        const btnContinuarFicha = document.getElementById("btn-continuar-ficha");
+        const btnVolverPaso1 = document.getElementById("btn-volver-paso1");
+        const errorPaso1 = document.getElementById("error-paso-bienvenida");
 
-    chipsHorario.forEach((chip) => {
-        chip.addEventListener("click", () => {
-            chipsHorario.forEach((c) => c.classList.remove("activo"));
-            chip.classList.add("activo");
-            horarioSeleccionado = chip.getAttribute("data-horario") || "";
-            if (errorMsg) errorMsg.classList.add("oculto");
+        const bloqueMenor = document.getElementById("bloque-menor-edad");
+        const saludoPersonalizado = document.getElementById("saludo-personalizado-ficha");
+        const labelContacto = document.getElementById("label-contacto-acogida");
+        const textoConsentimiento = document.getElementById("texto-consentimiento-agenda");
+
+        const contenedorConfirmacion = document.getElementById("contenedor-confirmacion-agenda");
+        const errorMsg = document.getElementById("error-formulario-agenda");
+        const btnNuevaCita = document.getElementById("btn-nueva-cita");
+
+        if (!btnContinuarFicha || btnContinuarFicha.dataset.bound === "true") return;
+        btnContinuarFicha.dataset.bound = "true";
+
+        btnContinuarFicha.addEventListener("click", function () {
+            const nombreInput = document.getElementById("nombre-acogida");
+            const edadInput = document.getElementById("edad-acogida");
+
+            const nombre = nombreInput && nombreInput.value ? nombreInput.value.trim() : "";
+            const edad = edadInput && edadInput.value ? Number(edadInput.value) : 0;
+
+            if (!nombre) {
+                if (errorPaso1) {
+                    errorPaso1.textContent = "Por favor, escribe tu nombre o un seudónimo para continuar.";
+                    errorPaso1.classList.remove("oculto");
+                }
+                return;
+            }
+
+            if (!edad || edad < 8 || edad > 99) {
+                if (errorPaso1) {
+                    errorPaso1.textContent = "Ingresa una edad válida para continuar.";
+                    errorPaso1.classList.remove("oculto");
+                }
+                return;
+            }
+
+            if (errorPaso1) errorPaso1.classList.add("oculto");
+
+            const esMenor = edad < 18;
+
+            if (saludoPersonalizado) {
+                saludoPersonalizado.textContent = "Hola, " + nombre + ". Completa estos datos para enviar tu solicitud de orientación.";
+            }
+
+            if (esMenor) {
+                if (bloqueMenor) bloqueMenor.classList.remove("oculto");
+                if (labelContacto) {
+                    labelContacto.textContent = "Correo o teléfono de contacto (tuyo o de tu padre/madre/apoderado)";
+                }
+                if (textoConsentimiento) {
+                    textoConsentimiento.innerHTML =
+                        "Acepto los <strong>términos y condiciones simulados</strong> para solicitud de orientación: comprendo que este entorno es de apoyo y orientación confidencial, y que para iniciar la atención psicológica se coordinará la autorización de mi <strong>padre, madre o apoderado</strong>. Ante una urgencia, puedo llamar gratis a la <strong>Línea 113 (opción 5)</strong> o a la <strong>Línea 100</strong>.";
+                }
+            } else {
+                if (bloqueMenor) bloqueMenor.classList.add("oculto");
+                if (labelContacto) {
+                    labelContacto.textContent = "Correo o canal de enlace privado";
+                }
+                if (textoConsentimiento) {
+                    textoConsentimiento.innerHTML =
+                        "Acepto los <strong>términos y condiciones simulados</strong> para solicitud de orientación: comprendo que este entorno es de apoyo y orientación confidencial, y que en caso de urgencia o riesgo inmediato puedo llamar gratis a la <strong>Línea 113 (opción 5)</strong> o a la <strong>Línea 100</strong>.";
+                }
+            }
+
+            if (pasoBienvenida) pasoBienvenida.classList.add("oculto");
+            if (pasoFicha) pasoFicha.classList.remove("oculto");
+            window.scrollTo({ top: 0, behavior: "smooth" });
         });
-    });
 
-    formulario?.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const nombreInput = document.getElementById("nombre-acogida") as HTMLInputElement | null;
-        const contactoInput = document.getElementById("contacto-acogida") as HTMLInputElement | null;
-        const modalidadSelect = document.getElementById("modalidad-agenda") as HTMLSelectElement | null;
-        const motivoSelect = document.getElementById("motivo-agenda") as HTMLSelectElement | null;
-        const consentimientoCheck = document.getElementById("check-consentimiento-agenda") as HTMLInputElement | null;
-
-        const nombre = nombreInput?.value.trim() || "";
-        const contacto = contactoInput?.value.trim() || "";
-
-        if (!nombre || !contacto) {
-            if (errorMsg) {
-                errorMsg.textContent = "Completa tu nombre o seudónimo y un canal de contacto para continuar.";
-                errorMsg.classList.remove("oculto");
-            }
-            return;
+        if (btnVolverPaso1) {
+            btnVolverPaso1.addEventListener("click", function () {
+                if (pasoFicha) pasoFicha.classList.add("oculto");
+                if (pasoBienvenida) pasoBienvenida.classList.remove("oculto");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
         }
 
-        if (!horarioSeleccionado) {
-            if (errorMsg) {
-                errorMsg.textContent = "Selecciona una franja horaria disponible antes de confirmar.";
-                errorMsg.classList.remove("oculto");
-            }
-            return;
+        if (formulario) {
+            formulario.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const nombreInput = document.getElementById("nombre-acogida");
+                const edadInput = document.getElementById("edad-acogida");
+                const ciudadInput = document.getElementById("ciudad-acogida");
+                const especialistaSelect = document.getElementById("especialista-agenda");
+                const contactoInput = document.getElementById("contacto-acogida");
+                const modalidadSelect = document.getElementById("modalidad-agenda");
+                const motivoSelect = document.getElementById("motivo-agenda");
+                const fechaInput = document.getElementById("fecha-seleccionada-input");
+                const horaInput = document.getElementById("hora-seleccionada-input");
+                const consentimientoCheck = document.getElementById("check-consentimiento-agenda");
+
+                const nombre = nombreInput && nombreInput.value ? nombreInput.value.trim() : "";
+                const edad = edadInput && edadInput.value ? edadInput.value.trim() : "";
+                const ciudad = ciudadInput && ciudadInput.value ? ciudadInput.value.trim() : "No especificada";
+                const contacto = contactoInput && contactoInput.value ? contactoInput.value.trim() : "";
+                const fecha = fechaInput && fechaInput.value ? fechaInput.value.trim() : "";
+                const hora = horaInput && horaInput.value ? horaInput.value.trim() : "";
+
+                if (!contacto) {
+                    if (errorMsg) {
+                        errorMsg.textContent = "Completa un canal de contacto para enviar tu solicitud de orientación.";
+                        errorMsg.classList.remove("oculto");
+                    }
+                    return;
+                }
+
+                if (!fecha) {
+                    if (errorMsg) {
+                        errorMsg.textContent = "Selecciona una fecha en el calendario antes de continuar.";
+                        errorMsg.classList.remove("oculto");
+                    }
+                    return;
+                }
+
+                if (!hora) {
+                    if (errorMsg) {
+                        errorMsg.textContent = "Selecciona una de las horas disponibles antes de continuar.";
+                        errorMsg.classList.remove("oculto");
+                    }
+                    return;
+                }
+
+                if (!consentimientoCheck || !consentimientoCheck.checked) {
+                    if (errorMsg) {
+                        errorMsg.textContent = "Debes aceptar los términos y condiciones simulados para enviar la solicitud.";
+                        errorMsg.classList.remove("oculto");
+                    }
+                    return;
+                }
+
+                if (errorMsg) errorMsg.classList.add("oculto");
+
+                const resumenNombre = document.getElementById("resumen-nombre");
+                const resumenEdadCiudad = document.getElementById("resumen-edad-ciudad");
+                const resumenEspecialista = document.getElementById("resumen-especialista");
+                const resumenContacto = document.getElementById("resumen-contacto");
+                const resumenModalidad = document.getElementById("resumen-modalidad");
+                const resumenMotivo = document.getElementById("resumen-motivo");
+                const resumenHorario = document.getElementById("resumen-horario");
+
+                if (resumenNombre) resumenNombre.textContent = nombre;
+                if (resumenEdadCiudad) resumenEdadCiudad.textContent = edad + " años — " + ciudad;
+                if (resumenEspecialista) {
+                    resumenEspecialista.textContent =
+                        especialistaSelect && especialistaSelect.value
+                            ? especialistaSelect.value
+                            : "Cualquier especialista disponible";
+                }
+                if (resumenContacto) resumenContacto.textContent = contacto;
+                if (resumenModalidad) resumenModalidad.textContent = modalidadSelect && modalidadSelect.value ? modalidadSelect.value : "";
+                if (resumenMotivo) resumenMotivo.textContent = motivoSelect && motivoSelect.value ? motivoSelect.value : "";
+                if (resumenHorario) resumenHorario.textContent = fecha + " — " + hora;
+
+                formulario.classList.add("oculto");
+                if (contenedorConfirmacion) contenedorConfirmacion.classList.remove("oculto");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
         }
 
-        if (!consentimientoCheck?.checked) {
-            if (errorMsg) {
-                errorMsg.textContent = "Debes marcar el consentimiento informado simulado para registrar la cita.";
-                errorMsg.classList.remove("oculto");
-            }
-            return;
+        if (btnNuevaCita) {
+            btnNuevaCita.addEventListener("click", function () {
+                if (formulario) formulario.reset();
+                if (typeof window.resetearCalendarioAgenda === "function") {
+                    window.resetearCalendarioAgenda();
+                }
+                if (contenedorConfirmacion) contenedorConfirmacion.classList.add("oculto");
+                if (pasoFicha) pasoFicha.classList.add("oculto");
+                if (pasoBienvenida) pasoBienvenida.classList.remove("oculto");
+                if (formulario) formulario.classList.remove("oculto");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
         }
+    }
 
-        if (errorMsg) errorMsg.classList.add("oculto");
-
-        const resumenNombre = document.getElementById("resumen-nombre");
-        const resumenContacto = document.getElementById("resumen-contacto");
-        const resumenModalidad = document.getElementById("resumen-modalidad");
-        const resumenMotivo = document.getElementById("resumen-motivo");
-        const resumenHorario = document.getElementById("resumen-horario");
-
-        if (resumenNombre) resumenNombre.textContent = nombre;
-        if (resumenContacto) resumenContacto.textContent = contacto;
-        if (resumenModalidad) resumenModalidad.textContent = modalidadSelect?.value || "";
-        if (resumenMotivo) resumenMotivo.textContent = motivoSelect?.value || "";
-        if (resumenHorario) resumenHorario.textContent = horarioSeleccionado;
-
-        formulario.classList.add("oculto");
-        contenedorConfirmacion?.classList.remove("oculto");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-    btnNuevaCita?.addEventListener("click", () => {
-        formulario?.reset();
-        horarioSeleccionado = "";
-        chipsHorario.forEach((c) => c.classList.remove("activo"));
-        contenedorConfirmacion?.classList.add("oculto");
-        formulario?.classList.remove("oculto");
-    });
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", iniciarFlujoAgenda);
+    } else {
+        iniciarFlujoAgenda();
+    }
+    document.addEventListener("astro:page-load", iniciarFlujoAgenda);
 </script>

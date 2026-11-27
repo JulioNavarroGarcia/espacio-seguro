@@ -1,8 +1,14 @@
-<div class="caja-consentimiento-agenda">
+<div style="display: flex; flex-direction: column; gap: 18px; margin-top: 18px;">
+    <div class="campo-formulario">
+        <label for="notas-acogida">¿Hay algo que quieras que sepamos antes? (Opcional)</label>
+        <textarea id="notas-acogida" rows="3" placeholder="Escribe brevemente cómo te sientes o qué te ayudaría a sentirte más cómodo..."></textarea>
+    </div>
+
+    <div class="caja-consentimiento-agenda" style="margin: 0;">
         <label class="check-consentimiento">
-            <input type="checkbox" id="check-consentimiento-agenda" required />
-            <span>
-                Acepto el <strong>consentimiento informado simulado</strong> para teleatención: comprendo que este entorno es de apoyo y orientación confidencial, y que en caso de riesgo vital inmediato debo acudir a servicios de emergencia locales.
+            <input type="checkbox" id="check-consentimiento-agenda" />
+            <span id="texto-consentimiento-agenda">
+                Acepto los <strong>términos y condiciones simulados</strong> para solicitud de orientación: comprendo que este entorno es de apoyo y orientación confidencial, y que en caso de urgencia o riesgo inmediato puedo llamar gratis a la <strong>Línea 113 (opción 5)</strong> o a la <strong>Línea 100</strong>.
             </span>
         </label>
     </div>
@@ -10,7 +16,7 @@
     <p class="error-agenda oculto" id="error-formulario-agenda"></p>
 
     <div class="acciones-agenda">
-        <a href="/test" class="boton-borde-oscuro boton-pequeno">Volver al test</a>
-        <button type="submit" class="boton-pastel" id="btn-confirmar-agenda">Confirmar cita virtual</button>
+        <button type="button" class="boton-borde-oscuro boton-pequeno" id="btn-volver-paso1">Volver</button>
+        <button type="submit" class="boton-pastel" id="btn-confirmar-agenda">Solicitar orientación</button>
     </div>
 </div>

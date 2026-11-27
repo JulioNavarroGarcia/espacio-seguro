@@ -1,4 +1,9 @@
-<header class="cabecera" id="cabecera-principal">
+---
+const rutaActual = Astro.url.pathname;
+const esInicio = rutaActual === "/" || rutaActual === "/index.html";
+---
+
+<header class={`cabecera ${esInicio ? "" : "cabecera-clara"}`} id="cabecera-principal">
     <div class="contenedor-cabecera">
         <a href="/#inicio" class="logo">
             <span class="punto-pastel"></span>
@@ -14,10 +19,50 @@
         <nav class="navegacion" id="menu-navegacion">
             <a href="/#inicio" class="enlace">Inicio</a>
             <a href="/#seccion-test" class="boton-pastel boton-pequeno">Hacer Test</a>
-            <a href="/#seccion-agenda" class="boton-cristal boton-pequeno">Agendar Cita</a>
+            <a href="/#seccion-agenda" class="boton-cristal boton-pequeno">Solicitar Orientación</a>
         </nav>
     </div>
 </header>
+
+<style is:global>
+    /* Aplica solo en páginas internas con fondo claro (/agenda, /test). El index queda intacto. */
+    .cabecera.cabecera-clara .logo,
+    .cabecera.cabecera-clara .logo strong {
+        color: #3a2d28;
+    }
+
+    .cabecera.cabecera-clara .enlace {
+        color: #3a2d28;
+        font-weight: 500;
+    }
+
+    .cabecera.cabecera-clara .enlace:hover {
+        color: #b56c57;
+    }
+
+    .cabecera.cabecera-clara .boton-cristal {
+        color: #3a2d28;
+        border: 1px solid rgba(58, 45, 40, 0.35);
+        background: rgba(255, 255, 255, 0.65);
+    }
+
+    .cabecera.cabecera-clara .boton-cristal:hover {
+        background: #3a2d28;
+        color: #ffffff;
+        border-color: #3a2d28;
+    }
+
+    .cabecera.cabecera-clara .boton-menu-movil span {
+        background-color: #3a2d28;
+    }
+
+    .cabecera.cabecera-clara.con-fondo-cristal {
+        background: rgba(253, 248, 244, 0.88);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(58, 45, 40, 0.08);
+    }
+</style>
 
 <script>
     let ultimoScroll = 0;
